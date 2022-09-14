@@ -6,7 +6,8 @@
     "type": "module",
     "scripts": {
         "dev": "nodemon ./index.js",
-        "start": "node ./index.js"
+        "start": "node ./index.js",
+        "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch"
     },
     "repository": {
         "type": "git",
@@ -21,6 +22,7 @@
     "homepage": "https://github.com/hamzafx5/file_share_flex#readme",
     "dependencies": {
         "aws-sdk": "^2.1209.0",
+        "bcrypt": "^5.0.1",
         "cors": "^2.8.5",
         "dotenv": "^16.0.2",
         "express": "^4.18.1",
@@ -33,6 +35,8 @@
         "passport-jwt": "^4.0.0"
     },
     "devDependencies": {
+        "@types/jest": "^29.0.2",
+        "jest": "^29.0.3",
         "kill-port": "^2.0.1",
         "morgan": "^1.10.0",
         "nodemon": "^2.0.19"

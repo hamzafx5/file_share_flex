@@ -25,10 +25,10 @@ const userSchema = new mongoose.Schema({
     },
 });
 
-const Users = mongoose.model("user", userSchema);
+const User = mongoose.model("user", userSchema);
 
 export function validateUser(user) {
     return joiUserSchema.validate(user);
 }
 
-export default Users;
+export default User;

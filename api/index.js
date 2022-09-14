@@ -1,7 +1,7 @@
 import { Router } from "express";
 const router = Router();
 
-import register from "./routes/register.js";
+import register from "./routes/register/register.js";
 import upload from "./routes/upload.js";
 import files from "./routes/files.js";
 
