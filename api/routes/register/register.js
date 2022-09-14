@@ -3,7 +3,7 @@ import hashPassword from "../../../helpers/hashPassword.js";
 const router = Router();
 import User, { validateUser } from "../../../models/Users.model.js";
 
-router.get("/register", async (req, res) => {
+router.post("/register", async (req, res) => {
     let user = {
         fullName: req.body.fullName,
         email: req.body.email,
