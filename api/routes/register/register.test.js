@@ -1,5 +1,5 @@
 describe("Test validation of registering a new user", () => {
-    test("pass", () => {
+    test("passing test", () => {
         expect(1).toBe(1);
     });
 });
