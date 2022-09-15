@@ -1,5 +1,6 @@
 import request from "supertest";
 import app from "../../../app.js";
+import randomHexString from "../../../helpers/randomHexString.js";
 
 describe("POST /users", () => {
     describe("Validate the user inputs", () => {
@@ -9,6 +10,7 @@ describe("POST /users", () => {
             expect(res.headers["content-type"]).toContain("json");
             expect(res.body).toEqual({
                 ok: false,
+                filed: "fullName",
                 message: '"Full Name" is required',
             });
         });
@@ -21,6 +23,7 @@ describe("POST /users", () => {
             expect(res.headers["content-type"]).toContain("json");
             expect(res.body).toEqual({
                 ok: false,
+                filed: "fullName",
                 message:
                     '"Full Name" length must be less than or equal to 30 characters long',
             });
@@ -34,6 +37,7 @@ describe("POST /users", () => {
             expect(res.headers["content-type"]).toContain("json");
             expect(res.body).toEqual({
                 ok: false,
+                filed: "fullName",
                 message:
                     '"Full Name" length must be at least 3 characters long',
             });
@@ -48,6 +52,7 @@ describe("POST /users", () => {
             expect(res.headers["content-type"]).toContain("json");
             expect(res.body).toEqual({
                 ok: false,
+                filed: "email",
                 message: '"Email" is required',
             });
         });
@@ -61,12 +66,14 @@ describe("POST /users", () => {
             expect(res.headers["content-type"]).toContain("json");
             expect(res.body).toEqual({
                 ok: false,
+                filed: "email",
                 message: '"Email" is not allowed to be empty',
             });
         });
         test("Return 400 status & json error if email is not valid", async () => {
             const res = await request(app).post("/api/v1/register").send({
                 fullName: "Hamza",
+                filed: "email",
                 email: "hamza@.net",
             });
 
@@ -74,6 +81,7 @@ describe("POST /users", () => {
             expect(res.headers["content-type"]).toContain("json");
             expect(res.body).toEqual({
                 ok: false,
+                filed: "email",
                 message: '"Email" must be a valid email',
             });
         });
@@ -87,6 +95,7 @@ describe("POST /users", () => {
             expect(res.headers["content-type"]).toContain("json");
             expect(res.body).toEqual({
                 ok: false,
+                filed: "email",
                 message: "This Email is already been used",
             });
         });
@@ -100,6 +109,7 @@ describe("POST /users", () => {
             expect(res.headers["content-type"]).toContain("json");
             expect(res.body).toEqual({
                 ok: false,
+                filed: "password",
                 message: '"Password" is required',
             });
         });
@@ -113,6 +123,7 @@ describe("POST /users", () => {
             expect(res.headers["content-type"]).toContain("json");
             expect(res.body).toEqual({
                 ok: false,
+                filed: "password",
                 message: '"Password" is not allowed to be empty',
             });
         });
@@ -126,6 +137,7 @@ describe("POST /users", () => {
             expect(res.headers["content-type"]).toContain("json");
             expect(res.body).toEqual({
                 ok: false,
+                filed: "password",
                 message: '"Password" length must be at least 6 characters long',
             });
         });
@@ -139,8 +151,25 @@ describe("POST /users", () => {
             expect(res.headers["content-type"]).toContain("json");
             expect(res.body).toEqual({
                 ok: false,
+                filed: "password",
                 message:
                     '"Password" length must be less than or equal to 20 characters long',
+            });
+        });
+        // Success
+        test("Return 201 status and json success response if the account is created", async () => {
+            const res = await request(app)
+                .post("/api/v1/register")
+                .send({
+                    fullName: "test Name",
+                    email: "testmail" + Date.now() + "@gmail.com",
+                    password: randomHexString(10),
+                });
+            expect(res.statusCode).toBe(201);
+            expect(res.headers["content-type"]).toContain("json");
+            expect(res.body).toEqual({
+                ok: true,
+                message: "The Account was created successfully",
             });
         });
     });

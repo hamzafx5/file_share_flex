@@ -11,9 +11,11 @@ router.post("/register", async (req, res) => {
     };
     const { error } = validateUser(user);
     if (error) {
+        const { message, context } = error.details[0];
         return res.status(400).json({
             ok: false,
-            message: error.details[0].message,
+            message: message,
+            filed: context.key,
         });
     }
 
@@ -22,6 +24,7 @@ router.post("/register", async (req, res) => {
     if (userWithThisEmail.length > 0) {
         return res.status(400).json({
             ok: false,
+            filed: "email",
             message: "This Email is already been used",
         });
     }
@@ -30,15 +33,12 @@ router.post("/register", async (req, res) => {
     user.password = await hashPassword(user.password);
 
     user = await new User(user).save();
-
-    res.json({
-        ok: true,
-        user: {
-            _id: user._id,
-            fullName: user.fullName,
-            email: user.email,
-        },
-    });
+    if (user && user._id) {
+        return res.status(201).json({
+            ok: true,
+            message: "The Account was created successfully",
+        });
+    }
 });
 
 export default router;
