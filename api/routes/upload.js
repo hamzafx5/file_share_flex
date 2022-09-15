@@ -12,7 +12,6 @@ const unlinkFile = util.promisify(fs.unlink);
 const storage = multer.diskStorage({
     destination: "uploads/temp",
     filename: function (req, file, cb) {
-        console.log(file);
         let fileName = getFileName(file.originalname).replace(" ", "_");
         let fileKey = randomHexString(24);
         let fileExtension = path.extname(file.originalname);

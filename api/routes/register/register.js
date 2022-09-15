@@ -1,7 +1,7 @@
 import { Router } from "express";
 import hashPassword from "../../../helpers/hashPassword.js";
 const router = Router();
-import User, { validateUser } from "../../../models/Users.model.js";
+import User, { validateUser } from "../../../modules/Users.module.js";
 
 router.post("/register", async (req, res) => {
     let user = {
