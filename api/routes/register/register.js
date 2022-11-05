@@ -1,5 +1,8 @@
 import { Router } from "express";
+import genOtp from "../../../helpers/genOtp.js";
 import hashPassword from "../../../helpers/hashPassword.js";
+import sendMail from "../../../mailer.js";
+import Otp from "../../../modules/Otp.module.js";
 const router = Router();
 import User, { validateUser } from "../../../modules/Users.module.js";
 
@@ -33,6 +36,18 @@ router.post("/register", async (req, res) => {
     user.password = await hashPassword(user.password);
 
     user = await new User(user).save();
+    const otp = await Otp({
+        userEmail: user.email,
+        code: genOtp(),
+    }).save();
+
+    await sendMail({
+        to: user.email,
+        subject: "Verify Email",
+        html: `<p style="text-align: center; font-size: 18px;">The verification code is <span style="color: #4F46E5; font-weight: bold">${otp.code}</span><p/>
+               <p style="text-align: center; font-size: 15px; margin-top: 20px;">Not this code will expire in 10 minutes<p/>
+        `,
+    }).catch(console.error);
     if (user && user._id) {
         return res.status(201).json({
             ok: true,

@@ -22,3 +22,7 @@ export function cookPassword(password) {
     });
     return cookedPassword.join("").trim();
 }
+
+export async function comparePassword(password, encryptedPassword) {
+    return await bcrypt.compare(cookPassword(password), encryptedPassword);
+}
